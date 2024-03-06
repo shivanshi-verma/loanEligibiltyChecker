@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Eligibility Checker and EMI Calculator</title>
+</head>
+
+<body>
+
+    <h2>Loan Eligibility Checker and EMI Calculator</h2>
+
+    <form id="loanEligibilityForm">
+        <label for="annualIncome">Annual Income (Rs):</label>
+        <input type="number" id="annualIncome" required><br><br>
+
+        <label for="creditScore">Credit Score:</label>
+        <input type="number" id="creditScore" required><br><br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" required><br><br>
+
+        <label for="monthlySalary">Monthly Salary (Rs):</label>
+        <input type="number" id="monthlySalary" required><br><br>
+
+        <label for="loanMultiplier">Loan Multiplier:</label>
+        <input type="number" id="loanMultiplier" required><br><br>
+
+        <button type="button" onclick="checkEligibility()">Check Eligibility</button>
+    </form>
+
+    <div id="result" style="display: none;">
+        <h3>Loan Eligibility Result</h3>
+        <p id="eligibilityResult"></p>
+        <p id="emiResult"></p>
+    </div>
+
+    <script>
+        function checkEligibility() {
+            var annualIncome = parseInt(document.getElementById("annualIncome").value);
+            var creditScore = parseInt(document.getElementById("creditScore").value);
+            var age = parseInt(document.getElementById("age").value);
+            var monthlySalary = parseInt(document.getElementById("monthlySalary").value);
+            var loanMultiplier = parseInt(document.getElementById("loanMultiplier").value);
+
+            // Check eligibility criteria
+            if (annualIncome >= 20000 && creditScore >= 700 && age >= 18 && age <= 65) {
+                var emiCapacity = monthlySalary * 0.6;
+                //using a shortcut instead of calculating and thus comparing the multiplication factor.
+                if (60 >= loanMultiplier) {
+                    loanMultiplier = loanMultiplier;
+                    var loanAmount = monthlySalary * loanMultiplier;
+                    var emi = calculateEMI(loanAmount);
+                    document.getElementById("eligibilityResult").textContent = "Congratulations! You are eligible for the loan. Your loan amount is Rs." + loanAmount + ".";
+                    document.getElementById("emiResult").textContent = "Your Equated Monthly Installment (EMI) is Rs." + emi.toFixed(2) + ".";
+                } else {
+                    document.getElementById("eligibilityResult").textContent = "Sorry, you are not eligible for the loan. Your EMI payment capacity exceeds 60% of your monthly salary.";
+                    document.getElementById("emiResult").textContent = "";
+                }
+            } else {
+                document.getElementById("eligibilityResult").textContent = "Sorry, you are not eligible for the loan. Please check if you meet all the eligibility criteria.";
+                document.getElementById("emiResult").textContent = "";
+            }
+
+            document.getElementById("result").style.display = "block";
+        }
+
+        function calculateEMI(loanAmount) {
+            var interestRate = 7; // Assumed interest rate (in percentage)
+            var tenure = 5; // Assumed tenure (in years)
+
+            var monthlyInterestRate = interestRate / (12 * 100);
+            var totalPayments = tenure * 12;
+            var emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalPayments)) / (Math.pow(1 + monthlyInterestRate, totalPayments) - 1);
+
+            return emi;
+        }
+    </script>
+
+</body>
+
+</html>
